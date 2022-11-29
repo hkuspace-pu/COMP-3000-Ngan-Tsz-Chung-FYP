@@ -11,14 +11,14 @@ If you haven't installed dependencies during setup:
 
     npm install
 
-
+yarn
 Build and deploy your contract to TestNet with a temporary dev account:
 
-        npm run deploy
+    npm run deploy
 
 Test your contract:
 
-        npm test
+    npm test
 
 If you have a frontend, run `npm start`. This will run a dev server.
 

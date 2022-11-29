@@ -1,8 +1,9 @@
 // React
 import React from 'react';
-import ReactDOM from 'react-dom';
+import {createRoot} from 'react-dom/client';
 import App from './App';
-
+const rootElement = document.getElementById('root');
+const root = createRoot(rootElement);
 // NEAR
 import { Wallet } from './near-wallet';
 
@@ -16,8 +17,7 @@ const wallet = new Wallet({ createAccessKeyFor: CONTRACT_ADDRESS })
 window.onload = async () => {
   const isSignedIn = await wallet.startUp()
  
-  ReactDOM.render(
+  root.render(
     <App isSignedIn={isSignedIn} contractId={CONTRACT_ADDRESS} wallet={wallet} />,
-    document.getElementById('root')
   );
 }

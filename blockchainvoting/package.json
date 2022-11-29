@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "license": "(MIT AND Apache-2.0)",
   "scripts": {
+    "preinstall": "cd frontend && npm install",
     "start": "cd frontend && npm run start",
     "deploy": "cd contract && ./deploy.sh",
     "build": "npm run build:contract && npm run build:web",
@@ -14,7 +15,7 @@
     "postinstall": "cd frontend && npm install && cd .. && echo rs tests && echo rs contract"
   },
   "devDependencies": {
-    "near-cli": "^3.3.0"
+    "near-cli": "^1.0.0"
   },
   "dependencies": {
     "create-near-app": "^5.2.2"
