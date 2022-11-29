@@ -39,7 +39,11 @@ This is a e-voting system using blockchain to improve the security.
    ```
 2. Install NPM packages
    ```sh
-   npm install
+   yarn preinstall
+   ```
+3. Run application
+   ```sh
+   yarn start
    ```
 
 
