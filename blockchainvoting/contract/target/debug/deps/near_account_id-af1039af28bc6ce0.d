@@ -1,0 +1,10 @@
+/Users/it.developer/Desktop/Projects/COMP3000/COMP-3000-Ngan-Tsz-Chung-FYP/blockchainvoting/contract/target/debug/deps/near_account_id-af1039af28bc6ce0.rmeta: /Users/it.developer/.cargo/registry/src/github.com-1ecc6299db9ec823/near-account-id-0.14.0/src/lib.rs /Users/it.developer/.cargo/registry/src/github.com-1ecc6299db9ec823/near-account-id-0.14.0/src/errors.rs /Users/it.developer/.cargo/registry/src/github.com-1ecc6299db9ec823/near-account-id-0.14.0/src/borsh.rs /Users/it.developer/.cargo/registry/src/github.com-1ecc6299db9ec823/near-account-id-0.14.0/src/serde.rs
+
+/Users/it.developer/Desktop/Projects/COMP3000/COMP-3000-Ngan-Tsz-Chung-FYP/blockchainvoting/contract/target/debug/deps/libnear_account_id-af1039af28bc6ce0.rlib: /Users/it.developer/.cargo/registry/src/github.com-1ecc6299db9ec823/near-account-id-0.14.0/src/lib.rs /Users/it.developer/.cargo/registry/src/github.com-1ecc6299db9ec823/near-account-id-0.14.0/src/errors.rs /Users/it.developer/.cargo/registry/src/github.com-1ecc6299db9ec823/near-account-id-0.14.0/src/borsh.rs /Users/it.developer/.cargo/registry/src/github.com-1ecc6299db9ec823/near-account-id-0.14.0/src/serde.rs
+
+/Users/it.developer/Desktop/Projects/COMP3000/COMP-3000-Ngan-Tsz-Chung-FYP/blockchainvoting/contract/target/debug/deps/near_account_id-af1039af28bc6ce0.d: /Users/it.developer/.cargo/registry/src/github.com-1ecc6299db9ec823/near-account-id-0.14.0/src/lib.rs /Users/it.developer/.cargo/registry/src/github.com-1ecc6299db9ec823/near-account-id-0.14.0/src/errors.rs /Users/it.developer/.cargo/registry/src/github.com-1ecc6299db9ec823/near-account-id-0.14.0/src/borsh.rs /Users/it.developer/.cargo/registry/src/github.com-1ecc6299db9ec823/near-account-id-0.14.0/src/serde.rs
+
+/Users/it.developer/.cargo/registry/src/github.com-1ecc6299db9ec823/near-account-id-0.14.0/src/lib.rs:
+/Users/it.developer/.cargo/registry/src/github.com-1ecc6299db9ec823/near-account-id-0.14.0/src/errors.rs:
+/Users/it.developer/.cargo/registry/src/github.com-1ecc6299db9ec823/near-account-id-0.14.0/src/borsh.rs:
+/Users/it.developer/.cargo/registry/src/github.com-1ecc6299db9ec823/near-account-id-0.14.0/src/serde.rs:
