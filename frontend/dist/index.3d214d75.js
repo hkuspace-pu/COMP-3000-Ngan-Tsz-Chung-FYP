@@ -27139,7 +27139,9 @@ var _bootstrapMinCss = require("bootstrap/dist/css/bootstrap.min.css");
 var _reactBootstrap = require("react-bootstrap");
 var _uiComponents = require("./ui-components");
 var _reactRouterDom = require("react-router-dom");
-function App() {
+function App({ isSignedIn , contractId , wallet , accountId  }) {
+    console.log("isSignedIn = " + isSignedIn);
+    console.log("accountId = " + wallet.accountId);
     return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactRouterDom.BrowserRouter), {
         children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactBootstrap.Navbar), {
             collapseOnSelect: true,
@@ -27149,18 +27151,18 @@ function App() {
             children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactBootstrap.Container), {
                 children: [
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactBootstrap.Navbar).Brand, {
-                        href: "#home",
-                        children: "React-Bootstrap"
+                        href: "/",
+                        children: "E-Voting System"
                     }, void 0, false, {
                         fileName: "App.js",
-                        lineNumber: 15,
+                        lineNumber: 17,
                         columnNumber: 19
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactBootstrap.Navbar).Toggle, {
                         "aria-controls": "responsive-navbar-nav"
                     }, void 0, false, {
                         fileName: "App.js",
-                        lineNumber: 16,
+                        lineNumber: 18,
                         columnNumber: 19
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactBootstrap.Navbar).Collapse, {
@@ -27169,93 +27171,46 @@ function App() {
                             className: "me-auto",
                             children: [
                                 /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactBootstrap.Nav).Link, {
-                                    href: "#features",
-                                    children: "Features"
+                                    href: "/NewPoll",
+                                    children: "New Poll"
                                 }, void 0, false, {
                                     fileName: "App.js",
-                                    lineNumber: 19,
+                                    lineNumber: 21,
                                     columnNumber: 23
                                 }, this),
                                 /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactBootstrap.Nav).Link, {
-                                    href: "#pricing",
-                                    children: "Pricing"
+                                    onClick: wallet.accountId === "" ? "login" : "logout",
+                                    children: wallet.accountId === "" ? "Login" : wallet.accountId
                                 }, void 0, false, {
                                     fileName: "App.js",
-                                    lineNumber: 20,
-                                    columnNumber: 23
-                                }, this),
-                                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactBootstrap.NavDropdown), {
-                                    title: "Dropdown",
-                                    id: "collasible-nav-dropdown",
-                                    children: [
-                                        /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactBootstrap.NavDropdown).Item, {
-                                            href: "#action/3.1",
-                                            children: "Action"
-                                        }, void 0, false, {
-                                            fileName: "App.js",
-                                            lineNumber: 22,
-                                            columnNumber: 25
-                                        }, this),
-                                        /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactBootstrap.NavDropdown).Item, {
-                                            href: "#action/3.2",
-                                            children: "Another action"
-                                        }, void 0, false, {
-                                            fileName: "App.js",
-                                            lineNumber: 23,
-                                            columnNumber: 25
-                                        }, this),
-                                        /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactBootstrap.NavDropdown).Item, {
-                                            href: "#action/3.3",
-                                            children: "Something"
-                                        }, void 0, false, {
-                                            fileName: "App.js",
-                                            lineNumber: 26,
-                                            columnNumber: 25
-                                        }, this),
-                                        /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactBootstrap.NavDropdown).Divider, {}, void 0, false, {
-                                            fileName: "App.js",
-                                            lineNumber: 27,
-                                            columnNumber: 25
-                                        }, this),
-                                        /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactBootstrap.NavDropdown).Item, {
-                                            href: "#action/3.4",
-                                            children: "Separated link"
-                                        }, void 0, false, {
-                                            fileName: "App.js",
-                                            lineNumber: 28,
-                                            columnNumber: 25
-                                        }, this)
-                                    ]
-                                }, void 0, true, {
-                                    fileName: "App.js",
-                                    lineNumber: 21,
+                                    lineNumber: 22,
                                     columnNumber: 23
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "App.js",
-                            lineNumber: 18,
+                            lineNumber: 20,
                             columnNumber: 21
                         }, this)
                     }, void 0, false, {
                         fileName: "App.js",
-                        lineNumber: 17,
+                        lineNumber: 19,
                         columnNumber: 19
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "App.js",
-                lineNumber: 14,
+                lineNumber: 16,
                 columnNumber: 17
             }, this)
         }, void 0, false, {
             fileName: "App.js",
-            lineNumber: 13,
+            lineNumber: 15,
             columnNumber: 16
         }, this)
     }, void 0, false, {
         fileName: "App.js",
-        lineNumber: 12,
+        lineNumber: 14,
         columnNumber: 14
     }, this);
 }
@@ -42055,6 +42010,7 @@ const NO_DEPOSIT = "0";
 class Wallet {
     walletSelector;
     wallet;
+    accountId = "";
     network;
     createAccessKeyFor;
     constructor({ createAccessKeyFor , network ="testnet"  }){
@@ -42081,7 +42037,7 @@ class Wallet {
         const isSignedIn = this.walletSelector.isSignedIn();
         if (isSignedIn) {
             this.wallet = await this.walletSelector.wallet();
-            this.accountId = this.walletSelector.store.getState().accounts[0].accountId;
+            this.accountId = this.walletSelector.store.getState().accounts[0].accountId ?? "";
         }
         return isSignedIn;
     }

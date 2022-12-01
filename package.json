@@ -15,9 +15,8 @@
     "postinstall": "cd frontend && npm install && cd .. && echo rs tests && echo rs contract"
   },
   "devDependencies": {
-    "near-cli": "^1.0.0"
+    "near-cli": "^3.3.0"
   },
   "dependencies": {
-    "create-near-app": "^5.2.2"
   }
 }

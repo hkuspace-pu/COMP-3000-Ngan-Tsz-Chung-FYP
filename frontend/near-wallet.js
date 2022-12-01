@@ -21,6 +21,7 @@ const NO_DEPOSIT = '0';
 export class Wallet {
   walletSelector;
   wallet;
+  accountId = '';
   network;
   createAccessKeyFor;
 
@@ -31,6 +32,7 @@ export class Wallet {
     // asked to sign all transactions.
     this.createAccessKeyFor = createAccessKeyFor
     this.network = 'testnet'
+
   }
 
   // To be called when the website loads
@@ -45,12 +47,13 @@ export class Wallet {
 
     if (isSignedIn) {
       this.wallet = await this.walletSelector.wallet();
-      this.accountId = this.walletSelector.store.getState().accounts[0].accountId;
+      this.accountId = this.walletSelector.store.getState().accounts[0].accountId ?? '';
     }
 
     return isSignedIn;
   }
 
+  
   // Sign-in method
   signIn() {
     const description = 'Please select a wallet to sign in.';
