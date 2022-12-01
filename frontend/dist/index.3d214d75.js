@@ -27153,9 +27153,11 @@ function App({ isSignedIn , contractId , wallet , accountId  }) {
     return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactRouterDom.BrowserRouter), {
         children: [
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactBootstrap.Navbar), {
+                style: {
+                    backgroundColor: "#8080E0"
+                },
                 collapseOnSelect: true,
                 expand: "lg",
-                bg: "dark",
                 variant: "dark",
                 children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _reactBootstrap.Container), {
                     children: [

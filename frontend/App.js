@@ -16,7 +16,7 @@ export default function App({ isSignedIn, contractId, wallet ,accountId}){
   console.log('isSignedIn = ' + isSignedIn);
   console.log('accountId = ' + wallet.accountId);
   return    (<Router>
-               <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+               <Navbar style={{backgroundColor:'#8080E0'}} collapseOnSelect expand="lg" variant="dark">
                 <Container>
                   <Navbar.Brand href="/">
                     <img style={{paddingRight: 10, alignSelf: 'flex-start'}}  width={50} height={50} src={voteIcon}/>{"E-Voting System"}
