@@ -1,1 +1,0 @@
-/Users/it.developer/Desktop/Projects/COMP3000/COMP-3000-Ngan-Tsz-Chung-FYP/blockchainvoting/contract/target/wasm32-unknown-unknown/release/hello_near.wasm: /Users/it.developer/Desktop/Projects/COMP3000/COMP-3000-Ngan-Tsz-Chung-FYP/blockchainvoting/contract/src/lib.rs

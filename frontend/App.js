@@ -1,40 +1,75 @@
 import 'regenerator-runtime/runtime';
 import React from 'react';
+
 import './assets/global.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import {Container,Navbar,Nav,NavDropdown} from 'react-bootstrap'
-import Home from './Components/Home'
-import PollingStation from './Components/PollingStation'
-import NewPoll from './Components/NewPoll'
-import voteIcon from './assets/vote_icon.png'
+
 import { EducationalText, SignInPrompt, SignOutButton } from './ui-components';
-import {
-  BrowserRouter as Router,
-  Route,Routes
-} from "react-router-dom";
-export default function App({ isSignedIn, contractId, wallet ,accountId}){
-  console.log('isSignedIn = ' + isSignedIn);
-  console.log('accountId = ' + wallet.accountId);
-  return    (<Router>
-               <Navbar style={{backgroundColor:'#8080E0'}} collapseOnSelect expand="lg" variant="dark">
-                <Container>
-                  <Navbar.Brand href="/">
-                    <img style={{paddingRight: 10, alignSelf: 'flex-start'}}  width={50} height={50} src={voteIcon}/>{"E-Voting System"}
-                    </Navbar.Brand>
-                  <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-                  <Navbar.Collapse id="responsive-navbar-nav">
-                    <Nav className="me-auto">
-                      <Nav.Link href="/NewPoll">New Poll</Nav.Link>
-                      <Nav.Link onClick={wallet.accountId === '' ? "login" : "logout"}>{wallet.accountId  === '' ? "Login":wallet.accountId}</Nav.Link>
-                    </Nav>
-                  </Navbar.Collapse>
-                </Container>
-              </Navbar>
-              <Routes>
-                <Route path="/" element={<Home/>}/>
-                <Route path="/PollingStation" element={<PollingStation/>}/>
-                <Route path="/NewPoll" element={<NewPoll/>}/>
-              </Routes>
-            </Router>
-            )
+
+
+export default function App({ isSignedIn, contractId, wallet }) {
+  const [valueFromBlockchain, setValueFromBlockchain] = React.useState();
+
+  const [uiPleaseWait, setUiPleaseWait] = React.useState(true);
+
+  // Get blockchian state once on component load
+  React.useEffect(() => {
+    getGreeting()
+      .then(setValueFromBlockchain)
+      .catch(alert)
+      .finally(() => {
+        setUiPleaseWait(false);
+      });
+    }
+  , []);
+
+  /// If user not signed-in with wallet - show prompt
+  if (!isSignedIn) {
+    // Sign-in flow will reload the page later
+    return <SignInPrompt greeting={valueFromBlockchain} onClick={() => wallet.signIn()}/>;
+  }
+
+  function changeGreeting(e) {
+    e.preventDefault();
+    setUiPleaseWait(true);
+    const { greetingInput } = e.target.elements;
+    
+    // use the wallet to send the greeting to the contract
+    wallet.callMethod({ method: 'set_greeting', args: { message: greetingInput.value }, contractId })
+      .then(async () => {return getGreeting();})
+      .then(setValueFromBlockchain)
+      .finally(() => {
+        setUiPleaseWait(false);
+      });
+  }
+
+  function getGreeting(){
+    // use the wallet to query the contract's greeting
+    return wallet.viewMethod({ method: 'get_greeting', contractId })
+  }
+
+  return (
+    <>
+      <SignOutButton accountId={wallet.accountId} onClick={() => wallet.signOut()}/>
+      <main className={uiPleaseWait ? 'please-wait' : ''}>
+        <h1>
+          The contract says: <span className="greeting">{valueFromBlockchain}</span>
+        </h1>
+        <form onSubmit={changeGreeting} className="change">
+          <label>Change greeting:</label>
+          <div>
+            <input
+              autoComplete="off"
+              defaultValue={valueFromBlockchain}
+              id="greetingInput"
+            />
+            <button>
+              <span>Save</span>
+              <div className="loader"></div>
+            </button>
+          </div>
+        </form>
+        <EducationalText/>
+      </main>
+    </>
+  );
 }
