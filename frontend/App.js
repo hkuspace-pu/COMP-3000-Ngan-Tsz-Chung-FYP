@@ -3,7 +3,6 @@ import React from 'react';
 
 import './assets/global.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { EducationalText, SignInPrompt, SignOutButton } from './ui-components';
 import {Container,Navbar,Nav,NavDropdown} from 'react-bootstrap'
 import Home from './Components/Home'
 import PollingStation from './Components/PollingStation'
@@ -14,6 +13,21 @@ import {
   Route,Routes
 } from "react-router-dom";
 export default function App({ isSignedIn, contractId, wallet }) {
+  const [valueFromBlockchain, setValueFromBlockchain] = React.useState();
+
+  const [uiPleaseWait, setUiPleaseWait] = React.useState(true);
+
+  // Get blockchian state once on component load
+  // React.useEffect(() => {
+  //   getGreeting()
+  //     .then(setValueFromBlockchain)
+  //     .catch(alert)
+  //     .finally(() => {
+  //       setUiPleaseWait(false);
+  //     });
+  //   }
+  // , []);
+
 
   return (  <Router>
               <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
@@ -25,9 +39,8 @@ export default function App({ isSignedIn, contractId, wallet }) {
                     </Nav>
                     <Nav>
                       <Nav.Link href="/NewPoll">NewPoll</Nav.Link>
-                      <Nav.Link href="/NewPoll">check</Nav.Link>
-                      <Nav.Link onClick={isSignedIn?wallet.signIn:wallet.signOut}>
-                        {isSignedIn?'Login':wallet.accoundId}
+                      <Nav.Link onClick={isSignedIn?() => wallet.signOut():() => wallet.signIn()}>
+                        {isSignedIn?'Logout':'Login'}
                       </Nav.Link>
                     </Nav>
                   </Navbar.Collapse>
