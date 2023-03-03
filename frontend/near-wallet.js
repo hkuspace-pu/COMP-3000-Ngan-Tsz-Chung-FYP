@@ -42,7 +42,7 @@ export class Wallet {
     });
 
     const isSignedIn = this.walletSelector.isSignedIn();
-
+    console.log('this.walletSelector = ' + this.walletSelector)
     if (isSignedIn) {
       this.wallet = await this.walletSelector.wallet();
       this.accountId = this.walletSelector.store.getState().accounts[0].accountId;
@@ -54,6 +54,7 @@ export class Wallet {
   // Sign-in method
   signIn() {
     const description = 'Please select a wallet to sign in.';
+    console.log('this.walletSelector = ' + this.walletSelector)
     const modal = setupModal(this.walletSelector, { contractId: this.createAccessKeyFor, description });
     modal.show();
   }
