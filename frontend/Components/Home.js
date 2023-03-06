@@ -2,26 +2,18 @@ import 'regenerator-runtime/runtime';
 import React , { useEffect, useState } from 'react';
 import {Table,Container,Button} from 'react-bootstrap'
 import { Candidate } from '../../contract/src/model'
-export default function Home({wallet,contractId }) {
+export default function Home({contract,gotoVotingPage }) {
 
   const [votingList, changeVotingList] = useState([]);
     useEffect(() => {
       const getPrompts = async () => {
         try {
-        var candidates = await getVotings()
-        console.log('votings = ' + JSON.stringify(candidates));
-        for (let index = 0; index < candidates.length; index++) {
-          console.log('index = ' + index);
-          
-            console.log('candidate.name = ' + candidates[index].name);
-            console.log('candidate.voteCount = ' + candidates[index].voteCount);
-        
-        
+          changeVotingList(await contract.getVotings());
+          var candidates = await contract.getVotings()
+          console.log('votings = ' + JSON.stringify(candidates));
+        } catch (error) {
+          console.log('error = ' + error);
         }
-      } catch (error) {
-        console.log('error = ' + error);
-      }
-        changeVotingList(await getVotings());
       };
       getPrompts();
     }, []);
@@ -41,12 +33,9 @@ export default function Home({wallet,contractId }) {
   
     },[]);}
   
-  // addVoting('candidate ');
-  console.log('votingList = ' + votingList);
-  // addVoteActivity('the first voting activity')
     return (  
       <Container>
-        <Button onClick={()=>{addVoting('voting 1')}}>Add Vote Activity</Button>
+        {/* <Button onClick={()=>{addVoting('voting 1')}}>Add Vote Activity</Button> */}
         <Table style={{margin:'2vh'}} striped border hover>
           <thead>
             <tr>
@@ -63,7 +52,7 @@ export default function Home({wallet,contractId }) {
                   <tr key={index}>
                     <td>{voting.id}</td>
                     <td>{voting.title}</td>
-                    <td><Button>Poll</Button></td>
+                    <td><Button onClick={() => gotoVotingPage(voting.id)}>Poll</Button></td>
                   </tr>
                 );
               })

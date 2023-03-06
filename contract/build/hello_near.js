@@ -591,9 +591,9 @@ let EVotingContract = (_dec = NearBindgen({}), _dec2 = view(), _dec3 = call({}),
 
   // Get the list of candidates in a specific voting
   getCandidates({
-    id
+    votingId
   }) {
-    const voting = this.votings[id];
+    const voting = this.votings[votingId];
     if (voting) {
       return voting.candidates;
     }
@@ -601,12 +601,12 @@ let EVotingContract = (_dec = NearBindgen({}), _dec2 = view(), _dec3 = call({}),
 
   // Check if a candidate exists in a specific voting
   candidateExists({
-    id,
+    votingId,
     candidateName
   }) {
-    const voting = this.votings[id];
+    const voting = this.votings[votingId];
     if (voting) {
-      return this.votings[id].candidates.some(candidate => candidate.name === candidateName);
+      return voting.candidates.some(candidate => candidate.name === candidateName);
     }
     return false;
   }
@@ -637,9 +637,9 @@ let EVotingContract = (_dec = NearBindgen({}), _dec2 = view(), _dec3 = call({}),
 
   // Get the total number of candidates in a specific voting
   getCandidatesCount({
-    id
+    votingId
   }) {
-    const voting = this.votings[id];
+    const voting = this.votings[votingId];
     if (voting) {
       return voting.candidates.length;
     }

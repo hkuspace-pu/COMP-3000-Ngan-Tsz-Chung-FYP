@@ -40,8 +40,8 @@ export class EVotingContract {
 
   // Get the list of candidates in a specific voting
   @view({})
-  getCandidates({id}:{id: number}): Candidate[] {
-    const voting = this.votings[id];
+  getCandidates({votingId}:{votingId: number}): Candidate[] {
+    const voting = this.votings[votingId];
     if (voting) {
       return voting.candidates;
     }
@@ -49,10 +49,10 @@ export class EVotingContract {
 
   // Check if a candidate exists in a specific voting
   @view({})
-  candidateExists({id, candidateName}:{id: string, candidateName: string}): boolean {
-    const voting = this.votings[id];
+  candidateExists({votingId, candidateName}:{votingId: string, candidateName: string}): boolean {
+    const voting = this.votings[votingId];
     if (voting) {
-      return this.votings[id].candidates.some((candidate) => candidate.name === candidateName);
+      return voting.candidates.some((candidate) => candidate.name === candidateName);
     }
     return false;
   }
@@ -81,8 +81,8 @@ export class EVotingContract {
 
   // Get the total number of candidates in a specific voting
   @view({})
-  getCandidatesCount({id}:{id: number}): number {
-    const voting = this.votings[id];
+  getCandidatesCount({votingId}:{votingId: number}): number {
+    const voting = this.votings[votingId];
     if (voting) {
       return voting.candidates.length;
     }
