@@ -19,7 +19,7 @@ window.onload = async () => {
 
   root.render(
     <React.StrictMode>
-        <App isSignedIn={isSignedIn} contractId={CONTRACT_ADDRESS} wallet={wallet} />,
+        <App isSignedIn={isSignedIn} contractId={CONTRACT_ADDRESS} wallet={wallet} />
     </React.StrictMode>
 
   

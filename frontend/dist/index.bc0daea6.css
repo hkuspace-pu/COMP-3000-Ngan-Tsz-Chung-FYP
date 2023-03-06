@@ -3,6 +3,17 @@ body {
   margin: 0;
 }
 
+.color-nav {
+  color: #fff;
+  background-color: #00008b;
+}
+
+.color-nav-link {
+  color: #fff;
+  background-color: #00008b;
+  font-size: 16px;
+}
+
 :root {
   --bs-blue: #0d6efd;
   --bs-indigo: #6610f2;

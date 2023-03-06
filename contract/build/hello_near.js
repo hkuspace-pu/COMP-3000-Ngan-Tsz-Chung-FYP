@@ -408,23 +408,6 @@ var DataLength;
 const U64_MAX = 2n ** 64n - 1n;
 const EVICTED_REGISTER = U64_MAX - 1n;
 /**
- * Logs parameters in the NEAR WASM virtual machine.
- *
- * @param params - Parameters to log.
- */
-function log(...params) {
-  env.log(params.reduce((accumulated, parameter, index) => {
-    // Stringify undefined
-    const param = parameter === undefined ? "undefined" : parameter;
-    // Convert Objects to strings and convert to string
-    const stringified = typeof param === "object" ? JSON.stringify(param) : `${param}`;
-    if (index === 0) {
-      return stringified;
-    }
-    return `${accumulated} ${stringified}`;
-  }, ""));
-}
-/**
  * Returns the account ID of the account that called the function.
  * Can only be called in a call or initialize function.
  */
@@ -550,48 +533,231 @@ function NearBindgen({
   };
 }
 
-var _dec, _dec2, _dec3, _class, _class2;
-let HelloNear = (_dec = NearBindgen({}), _dec2 = view(), _dec3 = call({}), _dec(_class = (_class2 = class HelloNear {
-  message = "Hello";
-  // This method is read-only and can be called for free
-  get_greeting() {
-    return this.message;
+// Candidate data structure
+class Candidate {
+  constructor(id, name, image, description) {
+    this.id = id;
+    this.name = name;
+    this.image = image;
+    this.description = description;
+    this.voteCount = 0;
   }
-  // This method changes the state, for which it cost gas
-  set_greeting({
-    message
-  }) {
-    log(`Saving greeting ${message}`);
-    this.message = message;
-  }
-}, (_applyDecoratedDescriptor(_class2.prototype, "get_greeting", [_dec2], Object.getOwnPropertyDescriptor(_class2.prototype, "get_greeting"), _class2.prototype), _applyDecoratedDescriptor(_class2.prototype, "set_greeting", [_dec3], Object.getOwnPropertyDescriptor(_class2.prototype, "set_greeting"), _class2.prototype)), _class2)) || _class);
-function set_greeting() {
-  const _state = HelloNear._getState();
-  if (!_state && HelloNear._requireInit()) {
-    throw new Error("Contract must be initialized");
-  }
-  const _contract = HelloNear._create();
-  if (_state) {
-    HelloNear._reconstruct(_contract, _state);
-  }
-  const _args = HelloNear._getArgs();
-  const _result = _contract.set_greeting(_args);
-  HelloNear._saveToStorage(_contract);
-  if (_result !== undefined) if (_result && _result.constructor && _result.constructor.name === "NearPromise") _result.onReturn();else env.value_return(HelloNear._serialize(_result, true));
-}
-function get_greeting() {
-  const _state = HelloNear._getState();
-  if (!_state && HelloNear._requireInit()) {
-    throw new Error("Contract must be initialized");
-  }
-  const _contract = HelloNear._create();
-  if (_state) {
-    HelloNear._reconstruct(_contract, _state);
-  }
-  const _args = HelloNear._getArgs();
-  const _result = _contract.get_greeting(_args);
-  if (_result !== undefined) if (_result && _result.constructor && _result.constructor.name === "NearPromise") _result.onReturn();else env.value_return(HelloNear._serialize(_result, true));
 }
 
-export { get_greeting, set_greeting };
+// Voting data structure
+class Voting {
+  candidates = [];
+  voted = new Map();
+  constructor(title, id) {
+    this.title = title;
+    this.id = id;
+  }
+}
+
+var _dec, _dec2, _dec3, _dec4, _dec5, _dec6, _dec7, _dec8, _dec9, _class, _class2;
+
+// E-Voting contract
+let EVotingContract = (_dec = NearBindgen({}), _dec2 = view(), _dec3 = call({}), _dec4 = call({}), _dec5 = view(), _dec6 = view(), _dec7 = call({}), _dec8 = view(), _dec9 = view(), _dec(_class = (_class2 = class EVotingContract {
+  constructor() {
+    this.votings = [];
+  }
+  // Get the list of votings
+  getVotings() {
+    return this.votings;
+  }
+
+  //add a voting
+  addVoting({
+    title
+  }) {
+    const voting = new Voting(title, this.votings.length + 1);
+    this.votings.push(voting);
+  }
+
+  //add candidate in a voting
+  addCandidate({
+    votingId,
+    name,
+    image,
+    description
+  }) {
+    for (const voting of this.votings) {
+      if (voting.id = votingId) {
+        const candidate = new Candidate(voting.candidates.length + 1, name, image, description);
+        voting.candidates.push(candidate);
+      }
+    }
+  }
+
+  // Get the list of candidates in a specific voting
+  getCandidates({
+    id
+  }) {
+    const voting = this.votings[id];
+    if (voting) {
+      return voting.candidates;
+    }
+  }
+
+  // Check if a candidate exists in a specific voting
+  candidateExists({
+    id,
+    candidateName
+  }) {
+    const voting = this.votings[id];
+    if (voting) {
+      return this.votings[id].candidates.some(candidate => candidate.name === candidateName);
+    }
+    return false;
+  }
+
+  // Allow a user to vote for a candidate in a specific voting
+  vote({
+    voteId,
+    candidateId
+  }) {
+    const accountId = currentAccountId();
+    const voting = this.votings[voteId];
+    if (voting) {
+      if (voting.voted.get(accountId)) {
+        // User has already voted
+        return;
+      }
+      const candidate = voting.candidates.find(c => c.id === candidateId);
+      if (!candidate) {
+        // Candidate does not exist
+        return;
+      }
+      // Increment the candidate's vote count and mark the sender as having voted
+      candidate.voteCount += 1;
+      voting.voted.set(accountId, true);
+      this.votings[voteId] = voting;
+    }
+  }
+
+  // Get the total number of candidates in a specific voting
+  getCandidatesCount({
+    id
+  }) {
+    const voting = this.votings[id];
+    if (voting) {
+      return voting.candidates.length;
+    }
+    return 0;
+  }
+
+  // Get the total number of votings
+  getVotingsCount() {
+    return this.votings.length;
+  }
+}, (_applyDecoratedDescriptor(_class2.prototype, "getVotings", [_dec2], Object.getOwnPropertyDescriptor(_class2.prototype, "getVotings"), _class2.prototype), _applyDecoratedDescriptor(_class2.prototype, "addVoting", [_dec3], Object.getOwnPropertyDescriptor(_class2.prototype, "addVoting"), _class2.prototype), _applyDecoratedDescriptor(_class2.prototype, "addCandidate", [_dec4], Object.getOwnPropertyDescriptor(_class2.prototype, "addCandidate"), _class2.prototype), _applyDecoratedDescriptor(_class2.prototype, "getCandidates", [_dec5], Object.getOwnPropertyDescriptor(_class2.prototype, "getCandidates"), _class2.prototype), _applyDecoratedDescriptor(_class2.prototype, "candidateExists", [_dec6], Object.getOwnPropertyDescriptor(_class2.prototype, "candidateExists"), _class2.prototype), _applyDecoratedDescriptor(_class2.prototype, "vote", [_dec7], Object.getOwnPropertyDescriptor(_class2.prototype, "vote"), _class2.prototype), _applyDecoratedDescriptor(_class2.prototype, "getCandidatesCount", [_dec8], Object.getOwnPropertyDescriptor(_class2.prototype, "getCandidatesCount"), _class2.prototype), _applyDecoratedDescriptor(_class2.prototype, "getVotingsCount", [_dec9], Object.getOwnPropertyDescriptor(_class2.prototype, "getVotingsCount"), _class2.prototype)), _class2)) || _class);
+function getVotingsCount() {
+  const _state = EVotingContract._getState();
+  if (!_state && EVotingContract._requireInit()) {
+    throw new Error("Contract must be initialized");
+  }
+  const _contract = EVotingContract._create();
+  if (_state) {
+    EVotingContract._reconstruct(_contract, _state);
+  }
+  const _args = EVotingContract._getArgs();
+  const _result = _contract.getVotingsCount(_args);
+  if (_result !== undefined) if (_result && _result.constructor && _result.constructor.name === "NearPromise") _result.onReturn();else env.value_return(EVotingContract._serialize(_result, true));
+}
+function getCandidatesCount() {
+  const _state = EVotingContract._getState();
+  if (!_state && EVotingContract._requireInit()) {
+    throw new Error("Contract must be initialized");
+  }
+  const _contract = EVotingContract._create();
+  if (_state) {
+    EVotingContract._reconstruct(_contract, _state);
+  }
+  const _args = EVotingContract._getArgs();
+  const _result = _contract.getCandidatesCount(_args);
+  if (_result !== undefined) if (_result && _result.constructor && _result.constructor.name === "NearPromise") _result.onReturn();else env.value_return(EVotingContract._serialize(_result, true));
+}
+function vote() {
+  const _state = EVotingContract._getState();
+  if (!_state && EVotingContract._requireInit()) {
+    throw new Error("Contract must be initialized");
+  }
+  const _contract = EVotingContract._create();
+  if (_state) {
+    EVotingContract._reconstruct(_contract, _state);
+  }
+  const _args = EVotingContract._getArgs();
+  const _result = _contract.vote(_args);
+  EVotingContract._saveToStorage(_contract);
+  if (_result !== undefined) if (_result && _result.constructor && _result.constructor.name === "NearPromise") _result.onReturn();else env.value_return(EVotingContract._serialize(_result, true));
+}
+function candidateExists() {
+  const _state = EVotingContract._getState();
+  if (!_state && EVotingContract._requireInit()) {
+    throw new Error("Contract must be initialized");
+  }
+  const _contract = EVotingContract._create();
+  if (_state) {
+    EVotingContract._reconstruct(_contract, _state);
+  }
+  const _args = EVotingContract._getArgs();
+  const _result = _contract.candidateExists(_args);
+  if (_result !== undefined) if (_result && _result.constructor && _result.constructor.name === "NearPromise") _result.onReturn();else env.value_return(EVotingContract._serialize(_result, true));
+}
+function getCandidates() {
+  const _state = EVotingContract._getState();
+  if (!_state && EVotingContract._requireInit()) {
+    throw new Error("Contract must be initialized");
+  }
+  const _contract = EVotingContract._create();
+  if (_state) {
+    EVotingContract._reconstruct(_contract, _state);
+  }
+  const _args = EVotingContract._getArgs();
+  const _result = _contract.getCandidates(_args);
+  if (_result !== undefined) if (_result && _result.constructor && _result.constructor.name === "NearPromise") _result.onReturn();else env.value_return(EVotingContract._serialize(_result, true));
+}
+function addCandidate() {
+  const _state = EVotingContract._getState();
+  if (!_state && EVotingContract._requireInit()) {
+    throw new Error("Contract must be initialized");
+  }
+  const _contract = EVotingContract._create();
+  if (_state) {
+    EVotingContract._reconstruct(_contract, _state);
+  }
+  const _args = EVotingContract._getArgs();
+  const _result = _contract.addCandidate(_args);
+  EVotingContract._saveToStorage(_contract);
+  if (_result !== undefined) if (_result && _result.constructor && _result.constructor.name === "NearPromise") _result.onReturn();else env.value_return(EVotingContract._serialize(_result, true));
+}
+function addVoting() {
+  const _state = EVotingContract._getState();
+  if (!_state && EVotingContract._requireInit()) {
+    throw new Error("Contract must be initialized");
+  }
+  const _contract = EVotingContract._create();
+  if (_state) {
+    EVotingContract._reconstruct(_contract, _state);
+  }
+  const _args = EVotingContract._getArgs();
+  const _result = _contract.addVoting(_args);
+  EVotingContract._saveToStorage(_contract);
+  if (_result !== undefined) if (_result && _result.constructor && _result.constructor.name === "NearPromise") _result.onReturn();else env.value_return(EVotingContract._serialize(_result, true));
+}
+function getVotings() {
+  const _state = EVotingContract._getState();
+  if (!_state && EVotingContract._requireInit()) {
+    throw new Error("Contract must be initialized");
+  }
+  const _contract = EVotingContract._create();
+  if (_state) {
+    EVotingContract._reconstruct(_contract, _state);
+  }
+  const _args = EVotingContract._getArgs();
+  const _result = _contract.getVotings(_args);
+  if (_result !== undefined) if (_result && _result.constructor && _result.constructor.name === "NearPromise") _result.onReturn();else env.value_return(EVotingContract._serialize(_result, true));
+}
+
+export { EVotingContract, addCandidate, addVoting, candidateExists, getCandidates, getCandidatesCount, getVotings, getVotingsCount, vote };
 //# sourceMappingURL=hello_near.js.map
