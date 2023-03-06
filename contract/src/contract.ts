@@ -76,10 +76,14 @@ export class EVotingContract {
           // Candidate does not exist
           return;
         }
-        // Increment the candidate's vote count and mark the sender as having voted
-        candidate.voteCount += 1;
-        voting.votedAccountId.push(accountId);
-        return;
+        for (const candidate of voting.candidates) {
+          if (candidate.cid == candidateId){
+            candidate.voteCount += 1;
+            voting.votedAccountId.push(accountId);
+            return;
+          }
+        }
+       
       }
     }
   }
