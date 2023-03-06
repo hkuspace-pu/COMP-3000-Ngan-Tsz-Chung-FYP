@@ -50,9 +50,9 @@ export default function Home({contract,gotoVotingPage }) {
               votingList.map((voting,index) => {
                 return (
                   <tr key={index}>
-                    <td>{voting.id}</td>
+                    <td>{voting.vid}</td>
                     <td>{voting.title}</td>
-                    <td><Button onClick={() => gotoVotingPage(voting.id)}>Poll</Button></td>
+                    <td><Button onClick={() => gotoVotingPage(voting.vid)}>Poll</Button></td>
                   </tr>
                 );
               })

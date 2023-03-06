@@ -9,6 +9,7 @@ import {Container,Navbar,Nav,NavDropdown} from 'react-bootstrap'
 import Home from './Components/Home'
 import VotingPage from './Components/VotingPage'
 import AddVoting from './Components/AddVoting'
+import VotingPageAddCandidate from './Components/VotingPageAddCandidate'
 // image
 import votingLogo from './assets/voting_icon.png'
 
@@ -19,7 +20,8 @@ import {
 export default function App({ isSignedIn, contractId, wallet, contract }) {
 
   const gotoVotingPage = async (voteId) => {
-    console.log(prompt);
+
+    console.log(' voteId = ' + voteId);
     localStorage.setItem("voteId", voteId);
     window.location.replace(window.location.href + "VotingPage");
   };
@@ -53,6 +55,7 @@ export default function App({ isSignedIn, contractId, wallet, contract }) {
                 <Route exact path="/" element={<Home contract={contract} gotoVotingPage={gotoVotingPage}/>}/>
                   <Route exact path="/VotingPage" element={<VotingPage contract={contract}/>}/>
                   <Route exact path="/AddVoting" element={<AddVoting contract={contract}/>}/>
+                  <Route exact path="/VotingPageAddCandidate" element={<VotingPageAddCandidate contract={contract}/>}/>
                 </Routes>
               </Router>
   )

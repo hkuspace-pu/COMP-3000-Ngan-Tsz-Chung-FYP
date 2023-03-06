@@ -5,12 +5,14 @@ import React, { useEffect, useState }  from 'react';
 export default function VotingPage({contract}) {
   const [candidateList, changeCandidateList] = useState([]);
     let voteId = localStorage.getItem("voteId");
+    console.log('VotingPage voteId = ' + voteId);
+    console.log('contract = ' + contract.check());
     useEffect(() => {
       const getPrompts = async () => {
         try {
           changeCandidateList(await contract.getCandidates(voteId));
           var candidates = await contract.getCandidates(voteId)
-          console.log('votings = ' + JSON.stringify(candidates));
+          console.log('candidates = ' + JSON.stringify(candidates));
         } catch (error) {
           console.log('error = ' + error);
         }
@@ -18,10 +20,15 @@ export default function VotingPage({contract}) {
       getPrompts();
     }, []);
     
+    const gotoAddCandidatePage = async () => {
+      console.log('voteId = ' + voteId);
+      localStorage.setItem("voteId", voteId);
+      window.location.replace(window.location.href + "AddCandidate");
+    };
    
     return (    
       <Container>
-      <Button onClick={()=>{contract.addCandidate(votingId, name, image, description)}}>Add Candidate</Button>
+      <Button onClick={()=>{gotoAddCandidatePage()}}>Add Candidate</Button>
       <Table style={{margin:'2vh'}} striped border hover>
         <thead>
           <tr>
@@ -39,7 +46,7 @@ export default function VotingPage({contract}) {
             candidateList.map((candidate,index) => {
               return (
                 <tr key={index}>
-                  <td>{candidate.id}</td>
+                  <td>{candidate.cid}</td>
                   <td>{candidate.image}</td>
                   <td>{candidate.name}</td>
                   <td>{candidate.description}</td>

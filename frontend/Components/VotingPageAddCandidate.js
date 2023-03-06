@@ -1,21 +1,24 @@
 import React, { useRef, useState } from "react";
 import { Container, Form, Button } from "react-bootstrap";
 
-export default function AddCandidate({voteId}) {
+export default function VotingPageAddCandidate({contract}) {
     const [disableButton, changeDisable] = useState(false);
     const candidateNameRef = useRef();
     const candidateImageRef = useRef();
     const candidateDescriptionRef = useRef();
-  const addNewCandidate = async () => {
-    changeDisable(true);
-    contract.addCandidate(
-        voteId,
-        candidateNameRef.current.value,
-        candidateImageRef.current.value,
-        candidateDescriptionRef.current.value,
-        )
-    alert("head back to home page");
-  };
+
+    let voteId = localStorage.getItem("voteId");
+
+    const addNewCandidate = async () => {
+        changeDisable(true);
+        contract.addCandidate(
+            voteId,
+            candidateNameRef.current.value,
+            candidateImageRef.current.value,
+            candidateDescriptionRef.current.value,
+            )
+        alert("head back to home page");
+    };
 
     return (      <Container style={{ marginTop: "10px" }}>
     <Form>
@@ -29,14 +32,14 @@ export default function AddCandidate({voteId}) {
       <Form.Group className='mb-3'>
         <Form.Label>Candidate Image</Form.Label>
         <Form.Control
-          ref={candidateNameRef}
+          ref={candidateImageRef}
           placeholder='Enter Candidate Image'
         ></Form.Control>
       </Form.Group>
       <Form.Group className='mb-3'>
         <Form.Label>Candidate Description</Form.Label>
         <Form.Control
-          ref={candidateNameRef}
+          ref={candidateDescriptionRef}
           placeholder='Enter Candidate Description'
         ></Form.Control>
       </Form.Group>

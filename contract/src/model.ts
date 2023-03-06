@@ -1,13 +1,13 @@
 // Candidate data structure
 export class Candidate {
-    id:number
+    cid:number
   name: string;
   image: string;
   description: string;
   voteCount: number;
 
-  constructor(id:number,name: string, image: string, description: string) {
-    this.id = id;
+  constructor(cid:number,name: string, image: string, description: string) {
+    this.cid = cid;
     this.name = name;
     this.image = image;
     this.description = description;
@@ -17,12 +17,12 @@ export class Candidate {
 
 // Voting data structure
 export class Voting {
-    id: number;
+    vid: number;
   title: string;
   candidates: Candidate[] = [];
   voted: Map<string, boolean> = new Map<string, boolean>();
-  constructor(title: string,id:number) {
+  constructor(title: string,vid:number) {
     this.title = title;
-    this.id = id;
+    this.vid = vid;
   }
 }

@@ -25,7 +25,7 @@ export class Contract {
 
   async addCandidate(votingId, name, image, description){
     // use the wallet to query the contract's greeting
-    return this.wallet.viewMethod({contractId:this.contractId, method: 'addCandidate' ,
+    return this.wallet.callMethod({contractId:this.contractId, method: 'addCandidate' ,
     args: { 
         votingId: votingId ,
         name: name ,
@@ -33,5 +33,10 @@ export class Contract {
         description: description 
         }
     })
+  }
+
+  check(){
+    // use the wallet to query the contract's greeting
+    return true;
   }
 }

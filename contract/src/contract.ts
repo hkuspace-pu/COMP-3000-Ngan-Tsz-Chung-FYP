@@ -31,9 +31,10 @@ export class EVotingContract {
   @call({})
   addCandidate({votingId, name, image, description}: {votingId: number, name: string, image: string, description: string}): void {
     for (const voting of this.votings) {
-      if (voting.id = votingId) {
+      if (voting.vid = votingId) {
         const candidate = new Candidate((voting.candidates.length + 1),name, image, description);
         voting.candidates.push(candidate);
+        return;
       }
     }
   }
@@ -42,51 +43,42 @@ export class EVotingContract {
   @view({})
   getCandidates({votingId}:{votingId: number}): Candidate[] {
     const voting = this.votings[votingId];
-    if (voting) {
-      return voting.candidates;
-    }
+    return voting.candidates;
   }
 
   // Check if a candidate exists in a specific voting
   @view({})
   candidateExists({votingId, candidateName}:{votingId: string, candidateName: string}): boolean {
     const voting = this.votings[votingId];
-    if (voting) {
-      return voting.candidates.some((candidate) => candidate.name === candidateName);
-    }
-    return false;
+    return voting.candidates.some((candidate) => candidate.name === candidateName);
   }
 
   // Allow a user to vote for a candidate in a specific voting
   @call({})
-  vote({voteId, candidateId}:{voteId: number, candidateId: number}): void {
+  vote({votingId, candidateId}:{votingId: number, candidateId: number}): void {
     const accountId = near.currentAccountId();
-    const voting = this.votings[voteId];
-    if (voting) {
-      if (voting.voted.get(accountId)) {
-        // User has already voted
-        return;
-      }
-      const candidate = voting.candidates.find((c) => c.id === candidateId);
-      if (!candidate) {
-        // Candidate does not exist
-        return;
-      }
-      // Increment the candidate's vote count and mark the sender as having voted
-      candidate.voteCount += 1;
-      voting.voted.set(accountId, true);
-      this.votings[voteId] = voting;
+    const voting = this.votings[votingId];
+   
+    if (voting.voted.get(accountId)) {
+      // User has already voted
+      return;
     }
+    const candidate = voting.candidates.find((c) => c.cid === candidateId);
+    if (!candidate) {
+      // Candidate does not exist
+      return;
+    }
+    // Increment the candidate's vote count and mark the sender as having voted
+    candidate.voteCount += 1;
+    voting.voted.set(accountId, true);
+
   }
 
   // Get the total number of candidates in a specific voting
   @view({})
   getCandidatesCount({votingId}:{votingId: number}): number {
     const voting = this.votings[votingId];
-    if (voting) {
-      return voting.candidates.length;
-    }
-    return 0;
+    return voting.candidates.length;
   }
 
 
