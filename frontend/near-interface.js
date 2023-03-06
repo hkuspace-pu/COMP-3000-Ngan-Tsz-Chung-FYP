@@ -35,6 +35,11 @@ export class Contract {
     })
   }
 
+  async vote(votingId,candidateId){
+    this.wallet.callMethod({ contractId:this.contractId ,method: 'vote', args: { votingId: votingId, candidateId:candidateId} })
+    
+  }
+
   check(){
     // use the wallet to query the contract's greeting
     return true;

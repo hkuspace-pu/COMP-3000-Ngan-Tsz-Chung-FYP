@@ -546,11 +546,11 @@ class Candidate {
 
 // Voting data structure
 class Voting {
-  candidates = [];
-  voted = new Map();
   constructor(title, vid) {
     this.title = title;
     this.vid = vid;
+    this.candidates = [];
+    this.votedAccountId = [];
   }
 }
 
@@ -594,8 +594,12 @@ let EVotingContract = (_dec = NearBindgen({}), _dec2 = view(), _dec3 = call({}),
   getCandidates({
     votingId
   }) {
-    const voting = this.votings[votingId];
-    return voting.candidates;
+    for (const voting of this.votings) {
+      if (voting.vid == votingId) {
+        return voting.candidates;
+      }
+    }
+    return [];
   }
 
   // Check if a candidate exists in a specific voting
@@ -603,8 +607,12 @@ let EVotingContract = (_dec = NearBindgen({}), _dec2 = view(), _dec3 = call({}),
     votingId,
     candidateName
   }) {
-    const voting = this.votings[votingId];
-    return voting.candidates.some(candidate => candidate.name === candidateName);
+    for (const voting of this.votings) {
+      if (voting.vid == votingId) {
+        return voting.candidates.some(candidate => candidate.name === candidateName);
+      }
+    }
+    return false;
   }
 
   // Allow a user to vote for a candidate in a specific voting
@@ -613,27 +621,35 @@ let EVotingContract = (_dec = NearBindgen({}), _dec2 = view(), _dec3 = call({}),
     candidateId
   }) {
     const accountId = currentAccountId();
-    const voting = this.votings[votingId];
-    if (voting.voted.get(accountId)) {
-      // User has already voted
-      return;
+    for (const voting of this.votings) {
+      if (voting.vid == votingId) {
+        if (voting.votedAccountId.some(aid => aid === accountId)) {
+          // User has already voted
+          return;
+        }
+        const candidate = voting.candidates.find(c => c.cid === candidateId);
+        if (!candidate) {
+          // Candidate does not exist
+          return;
+        }
+        // Increment the candidate's vote count and mark the sender as having voted
+        candidate.voteCount += 1;
+        voting.votedAccountId.push(accountId);
+        return;
+      }
     }
-    const candidate = voting.candidates.find(c => c.cid === candidateId);
-    if (!candidate) {
-      // Candidate does not exist
-      return;
-    }
-    // Increment the candidate's vote count and mark the sender as having voted
-    candidate.voteCount += 1;
-    voting.voted.set(accountId, true);
   }
 
   // Get the total number of candidates in a specific voting
   getCandidatesCount({
     votingId
   }) {
-    const voting = this.votings[votingId];
-    return voting.candidates.length;
+    for (const voting of this.votings) {
+      if (voting.vid == votingId) {
+        return voting.candidates.length;
+      }
+    }
+    return 0;
   }
 
   // Get the total number of votings

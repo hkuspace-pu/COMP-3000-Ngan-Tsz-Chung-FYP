@@ -19,10 +19,12 @@ export class Candidate {
 export class Voting {
     vid: number;
   title: string;
-  candidates: Candidate[] = [];
-  voted: Map<string, boolean> = new Map<string, boolean>();
+  candidates: Candidate[];
+  votedAccountId:string[];
   constructor(title: string,vid:number) {
     this.title = title;
     this.vid = vid;
+    this.candidates = [];
+    this.votedAccountId = []
   }
 }

@@ -26,6 +26,10 @@ export default function VotingPage({contract}) {
       window.location.replace(window.location.href + "AddCandidate");
     };
    
+    const vote = async () => {
+      await contract.vote(voteId);
+      changeCandidateList(await contract.getCandidates(voteId));
+    };
     return (    
       <Container>
       <Button onClick={()=>{gotoAddCandidatePage()}}>Add Candidate</Button>
@@ -47,11 +51,11 @@ export default function VotingPage({contract}) {
               return (
                 <tr key={index}>
                   <td>{candidate.cid}</td>
-                  <td>{candidate.image}</td>
+                  <td><img src={candidate.image}/></td>
                   <td>{candidate.name}</td>
                   <td>{candidate.description}</td>
                   <td>{candidate.voteCount}</td>
-                  <td><Button>vote</Button></td>
+                  <td><Button onClick={()=>{vote()}}>vote</Button></td>
                 </tr>
               );
             })
