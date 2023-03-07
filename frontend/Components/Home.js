@@ -2,7 +2,8 @@ import 'regenerator-runtime/runtime';
 import React , { useEffect, useState } from 'react';
 import {Table,Container,Button} from 'react-bootstrap'
 import { Candidate } from '../../contract/src/model'
-export default function Home({contract,gotoVotingPage }) {
+import 'bootstrap/dist/css/bootstrap.min.css'
+export default function Home({contract }) {
 
   const [votingList, changeVotingList] = useState([]);
     useEffect(() => {
@@ -22,17 +23,11 @@ export default function Home({contract,gotoVotingPage }) {
     // use the wallet to query the contract's greeting
     return wallet.viewMethod({ method: 'getVotings', contractId })
   }
-
-  function addVoting(title){
-    wallet.callMethod({ method: 'addVoting', args: { title: title }, contractId })
-    .then(async () => {    
-     
-        changeVotingList(await getVotings());
-
-        // console.log('getVotings' + await getVotings());
-  
-    },[]);}
-  
+  const gotoVotingPage = async (voteId) => {
+    console.log(' voteId = ' + voteId);
+    localStorage.setItem("voteId", voteId);
+    window.location.replace("/VotingPage");
+  };
     return (  
       <Container>
         {/* <Button onClick={()=>{addVoting('voting 1')}}>Add Vote Activity</Button> */}
@@ -52,7 +47,7 @@ export default function Home({contract,gotoVotingPage }) {
                   <tr key={index}>
                     <td>{voting.vid}</td>
                     <td>{voting.title}</td>
-                    <td><Button onClick={() => gotoVotingPage(voting.vid)}>Poll</Button></td>
+                    <td><Button className='btn btn-primary' onClick={() => gotoVotingPage(voting.vid)}>Poll</Button></td>
                   </tr>
                 );
               })

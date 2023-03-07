@@ -4,9 +4,14 @@ import { Container, Form, Button } from "react-bootstrap";
 export default function AddVoting({contract}) {
   const addNewvoting = async () => {
     changeDisable(true);
-    contract.addVoting(voteNameRef.current.value)
-    alert("head back to home page");
+    console.log('response = ' + await contract.addVoting(voteNameRef.current.value).then(() => {
+      
+      window.location.replace("/")
+    
+    }))
   };
+
+  
   const [disableButton, changeDisable] = useState(false);
   const voteNameRef = useRef();
     return (      <Container style={{ marginTop: "10px" }}>
@@ -21,9 +26,9 @@ export default function AddVoting({contract}) {
     </Form>
 
     <Button
+    class='btn-primary'
       disabled={disableButton}
       onClick={addNewvoting}
-      variant='primary'
     >
       Submit
     </Button>

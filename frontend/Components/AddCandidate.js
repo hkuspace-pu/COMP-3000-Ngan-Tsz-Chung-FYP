@@ -1,23 +1,28 @@
 import React, { useRef, useState } from "react";
 import { Container, Form, Button } from "react-bootstrap";
 
-export default function VotingPageAddCandidate({contract}) {
+export default function AddCandidate({contract}) {
     const [disableButton, changeDisable] = useState(false);
     const candidateNameRef = useRef();
     const candidateImageRef = useRef();
     const candidateDescriptionRef = useRef();
 
     let voteId = localStorage.getItem("voteId");
-
+    console.log('voteId = ' + voteId);
     const addNewCandidate = async () => {
+      console.log('voteId = ' + voteId);
         changeDisable(true);
-        contract.addCandidate(
+        await contract.addCandidate(
             voteId,
             candidateNameRef.current.value,
             candidateImageRef.current.value,
             candidateDescriptionRef.current.value,
-            )
-        alert("head back to home page");
+            ).then(() => {
+      
+              window.location.replace("/VotingPage")
+            
+            })
+      
     };
 
     return (      <Container style={{ marginTop: "10px" }}>
@@ -46,9 +51,9 @@ export default function VotingPageAddCandidate({contract}) {
     </Form>
 
     <Button
+     className='btn-primary'
       disabled={disableButton}
       onClick={addNewCandidate}
-      variant='primary'
     >
       Submit
     </Button>

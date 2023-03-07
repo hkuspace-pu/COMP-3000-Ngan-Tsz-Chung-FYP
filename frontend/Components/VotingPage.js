@@ -23,22 +23,24 @@ export default function VotingPage({contract}) {
     const gotoAddCandidatePage = async () => {
       console.log('voteId = ' + voteId);
       localStorage.setItem("voteId", voteId);
-      window.location.replace(window.location.href + "AddCandidate");
+      window.location.replace("/AddCandidate");
     };
    
-    const vote = async () => {
-      await contract.vote(voteId);
+    const vote = async (candidateId) => {
+      console.log('voteId = ' + voteId);
+      console.log('candidateId = ' + candidateId);
+      await contract.vote(voteId,candidateId);
       changeCandidateList(await contract.getCandidates(voteId));
     };
     return (    
       <Container>
-      <Button onClick={()=>{gotoAddCandidatePage()}}>Add Candidate</Button>
+      <Button className='btn-primary' onClick={()=>{gotoAddCandidatePage()}}>Add Candidate</Button>
       <Table style={{margin:'2vh'}} striped border hover>
         <thead>
           <tr>
             <th>Id</th>
             <th>Photo</th>
-            <th>Candidate</th>
+            <th>name</th>
             <th>Description</th>
             <th>count</th>
             <th></th>
@@ -55,7 +57,7 @@ export default function VotingPage({contract}) {
                   <td>{candidate.name}</td>
                   <td>{candidate.description}</td>
                   <td>{candidate.voteCount}</td>
-                  <td><Button onClick={()=>{vote()}}>vote</Button></td>
+                  <td><Button className='btn-primary' onClick={()=>{vote(candidate.cid)}}>vote</Button></td>
                 </tr>
               );
             })

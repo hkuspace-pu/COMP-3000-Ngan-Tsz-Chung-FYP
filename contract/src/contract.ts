@@ -12,7 +12,7 @@ export class EVotingContract {
   votings: Voting[]
 
   constructor() {
-    this.votings = []
+    this.votings = new Array<Voting>()
   }
   // Get the list of votings
   @view({})
@@ -23,29 +23,26 @@ export class EVotingContract {
   //add a voting
   @call({})
   addVoting({title}:{title: string}): void {
-    const voting = new Voting(title,(this.votings.length + 1));
+    const voting = new Voting((this.votings.length + 1),title);
     this.votings.push(voting);
   }
   
   //add candidate in a voting
   @call({})
   addCandidate({votingId, name, image, description}: {votingId: number, name: string, image: string, description: string}): void {
-    for (const voting of this.votings) {
-      if (voting.vid = votingId) {
-        const candidate = new Candidate((voting.candidates.length + 1),name, image, description);
-        voting.candidates.push(candidate);
-        return;
-      }
+    const voting = this.votings.find((v) => v.vid == votingId);
+    if (voting){
+      const candidate = new Candidate((voting.candidates.length + 1),name, image, description);
+      voting.candidates.push(candidate);
     }
   }
 
   // Get the list of candidates in a specific voting
   @view({})
   getCandidates({votingId}:{votingId: number}): Candidate[] {
-    for (const voting of this.votings) {
-      if (voting.vid == votingId){
+    const voting = this.votings.find((v) => v.vid == votingId);
+    if (voting){
         return voting.candidates;
-      }
     }
     return []
   }
@@ -53,11 +50,11 @@ export class EVotingContract {
   // Check if a candidate exists in a specific voting
   @view({})
   candidateExists({votingId, candidateName}:{votingId: number, candidateName: string}): boolean {
-    for (const voting of this.votings) {
-      if (voting.vid == votingId){
+    const voting = this.votings.find((v) => v.vid == votingId);
+    if (voting){
         return voting.candidates.some((candidate) => candidate.name === candidateName);
-      }
     }
+    
     return false
   }
 
@@ -65,36 +62,30 @@ export class EVotingContract {
   @call({})
   vote({votingId, candidateId}:{votingId: number, candidateId: number}): void {
     const accountId = near.currentAccountId();
-    for (const voting of this.votings) {
-      if (voting.vid == votingId){
-        if (voting.votedAccountId.some((aid) => aid === accountId)) {
+    const voting = this.votings.find((v) => v.vid == votingId);
+    if (voting){
+        if (voting.votedAccountId.some((aid) => aid == accountId)) {
           // User has already voted
           return;
         }
-        const candidate = voting.candidates.find((c) => c.cid === candidateId);
+        const candidate = voting.candidates.find((c) => c.cid == candidateId);
         if (!candidate) {
           // Candidate does not exist
           return;
         }
-        for (const candidate of voting.candidates) {
-          if (candidate.cid == candidateId){
-            candidate.voteCount += 1;
-            voting.votedAccountId.push(accountId);
-            return;
-          }
-        }
-       
-      }
+        // Increment the candidate's vote count and mark the sender as having voted
+        candidate.voteCount += 1;
+        voting.votedAccountId.push(accountId);
+        return;
     }
   }
 
   // Get the total number of candidates in a specific voting
   @view({})
   getCandidatesCount({votingId}:{votingId: number}): number {
-    for (const voting of this.votings) {
-      if (voting.vid == votingId){
+    const voting = this.votings.find((v) => v.vid == votingId);
+    if (voting){
         return voting.candidates.length;
-      }
     }
     return 0;
   }

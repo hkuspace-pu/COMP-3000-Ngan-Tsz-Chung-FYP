@@ -1,10 +1,10 @@
 // Candidate data structure
 export class Candidate {
-    cid:number
-  name: string;
-  image: string;
-  description: string;
-  voteCount: number;
+    cid:number = 0
+  name: string = '';
+  image: string = '';
+  description: string = '';
+  voteCount: number = 0;
 
   constructor(cid:number,name: string, image: string, description: string) {
     this.cid = cid;
@@ -17,14 +17,12 @@ export class Candidate {
 
 // Voting data structure
 export class Voting {
-    vid: number;
-  title: string;
-  candidates: Candidate[];
-  votedAccountId:string[];
-  constructor(title: string,vid:number) {
-    this.title = title;
+    vid: number = 0;
+  title: string = '';
+  candidates: Candidate[] = [];
+  votedAccountId:string[] = [];
+  constructor(vid:number,title: string) {
     this.vid = vid;
-    this.candidates = [];
-    this.votedAccountId = []
+    this.title = title;
   }
 }

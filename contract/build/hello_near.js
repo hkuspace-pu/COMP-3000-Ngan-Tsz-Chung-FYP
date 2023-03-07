@@ -535,6 +535,11 @@ function NearBindgen({
 
 // Candidate data structure
 class Candidate {
+  cid = 0;
+  name = '';
+  image = '';
+  description = '';
+  voteCount = 0;
   constructor(cid, name, image, description) {
     this.cid = cid;
     this.name = name;
@@ -546,11 +551,13 @@ class Candidate {
 
 // Voting data structure
 class Voting {
-  constructor(title, vid) {
-    this.title = title;
+  vid = 0;
+  title = '';
+  candidates = [];
+  votedAccountId = [];
+  constructor(vid, title) {
     this.vid = vid;
-    this.candidates = [];
-    this.votedAccountId = [];
+    this.title = title;
   }
 }
 
@@ -559,7 +566,7 @@ var _dec, _dec2, _dec3, _dec4, _dec5, _dec6, _dec7, _dec8, _dec9, _class, _class
 // E-Voting contract
 let EVotingContract = (_dec = NearBindgen({}), _dec2 = view(), _dec3 = call({}), _dec4 = call({}), _dec5 = view(), _dec6 = view(), _dec7 = call({}), _dec8 = view(), _dec9 = view(), _dec(_class = (_class2 = class EVotingContract {
   constructor() {
-    this.votings = [];
+    this.votings = new Array();
   }
   // Get the list of votings
   getVotings() {
@@ -570,7 +577,7 @@ let EVotingContract = (_dec = NearBindgen({}), _dec2 = view(), _dec3 = call({}),
   addVoting({
     title
   }) {
-    const voting = new Voting(title, this.votings.length + 1);
+    const voting = new Voting(this.votings.length + 1, title);
     this.votings.push(voting);
   }
 
@@ -581,12 +588,10 @@ let EVotingContract = (_dec = NearBindgen({}), _dec2 = view(), _dec3 = call({}),
     image,
     description
   }) {
-    for (const voting of this.votings) {
-      if (voting.vid = votingId) {
-        const candidate = new Candidate(voting.candidates.length + 1, name, image, description);
-        voting.candidates.push(candidate);
-        return;
-      }
+    const voting = this.votings.find(v => v.vid == votingId);
+    if (voting) {
+      const candidate = new Candidate(voting.candidates.length + 1, name, image, description);
+      voting.candidates.push(candidate);
     }
   }
 
@@ -594,10 +599,9 @@ let EVotingContract = (_dec = NearBindgen({}), _dec2 = view(), _dec3 = call({}),
   getCandidates({
     votingId
   }) {
-    for (const voting of this.votings) {
-      if (voting.vid == votingId) {
-        return voting.candidates;
-      }
+    const voting = this.votings.find(v => v.vid == votingId);
+    if (voting) {
+      return voting.candidates;
     }
     return [];
   }
@@ -607,10 +611,9 @@ let EVotingContract = (_dec = NearBindgen({}), _dec2 = view(), _dec3 = call({}),
     votingId,
     candidateName
   }) {
-    for (const voting of this.votings) {
-      if (voting.vid == votingId) {
-        return voting.candidates.some(candidate => candidate.name === candidateName);
-      }
+    const voting = this.votings.find(v => v.vid == votingId);
+    if (voting) {
+      return voting.candidates.some(candidate => candidate.name === candidateName);
     }
     return false;
   }
@@ -621,25 +624,21 @@ let EVotingContract = (_dec = NearBindgen({}), _dec2 = view(), _dec3 = call({}),
     candidateId
   }) {
     const accountId = currentAccountId();
-    for (const voting of this.votings) {
-      if (voting.vid == votingId) {
-        if (voting.votedAccountId.some(aid => aid === accountId)) {
-          // User has already voted
-          return;
-        }
-        const candidate = voting.candidates.find(c => c.cid === candidateId);
-        if (!candidate) {
-          // Candidate does not exist
-          return;
-        }
-        for (const candidate of voting.candidates) {
-          if (candidate.cid == candidateId) {
-            candidate.voteCount += 1;
-            voting.votedAccountId.push(accountId);
-            return;
-          }
-        }
+    const voting = this.votings.find(v => v.vid == votingId);
+    if (voting) {
+      if (voting.votedAccountId.some(aid => aid == accountId)) {
+        // User has already voted
+        return;
       }
+      const candidate = voting.candidates.find(c => c.cid == candidateId);
+      if (!candidate) {
+        // Candidate does not exist
+        return;
+      }
+      // Increment the candidate's vote count and mark the sender as having voted
+      candidate.voteCount += 1;
+      voting.votedAccountId.push(accountId);
+      return;
     }
   }
 
@@ -647,10 +646,9 @@ let EVotingContract = (_dec = NearBindgen({}), _dec2 = view(), _dec3 = call({}),
   getCandidatesCount({
     votingId
   }) {
-    for (const voting of this.votings) {
-      if (voting.vid == votingId) {
-        return voting.candidates.length;
-      }
+    const voting = this.votings.find(v => v.vid == votingId);
+    if (voting) {
+      return voting.candidates.length;
     }
     return 0;
   }
