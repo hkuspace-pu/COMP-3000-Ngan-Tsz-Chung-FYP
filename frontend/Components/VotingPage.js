@@ -49,7 +49,7 @@ export default function VotingPage({contract,isAdmin}) {
        {isAdmin ? <Button className='m-3 btn-primary' onClick={()=>{gotoAddCandidatePage()}}>Add Candidate</Button> : null}
         
         <Col>
-        <label className='m-3'>{'description : ' + description}</label>
+        <label className='m-3'>{'Description : ' + description}</label>
         </Col>
       <Table style={{margin:'2vh'}} striped border >
         <thead>

@@ -21,7 +21,7 @@ export default function App({ isSignedIn, contractId, wallet, contract }) {
   const addAmin= async () =>{
     await contract.addAdmin('ngantszchung.testnet')
   }
-  addAmin()
+ 
   const [isAdmin, changeIsAdmin] = useState(false);
     useEffect(() => {
       const getPrompts = async () => {
@@ -29,7 +29,9 @@ export default function App({ isSignedIn, contractId, wallet, contract }) {
           var admins = await contract.getAdmins()
           var checkIsAdmin = admins.some((admin) => admin.aid == wallet.accountId)
           changeIsAdmin(checkIsAdmin);
-          
+          if (admins.length == 0){
+            addAmin()
+          }
        
         } catch (error) {
           console.log('error = ' + error);
@@ -41,13 +43,6 @@ export default function App({ isSignedIn, contractId, wallet, contract }) {
   console.log('wallet.accountId ' + wallet.accountId)
   console.log('isAdmin = ' + JSON.stringify(isAdmin));
 
-  
-
-
-  const getAdmins = async () => {
-    await contract.getAdmins();
-    changeVotingList(await contract.getVotings());
-  };
   return (  <Router>
               <Navbar className='color-nav' collapseOnSelect expand="lg" variant="dark">
                 <Container>

@@ -600,7 +600,10 @@ let EVotingContract = (_dec = NearBindgen({}), _dec2 = call({}), _dec3 = call({}
   isAdmin({
     aid
   }) {
-    return this.admins.some(admin => admin.aid == aid);
+    const admin = this.admins.find(admin => admin.aid == aid);
+    if (admin) {
+      return true;
+    }
   }
   // Get the list of admins  
   getAdmins() {
@@ -700,7 +703,10 @@ let EVotingContract = (_dec = NearBindgen({}), _dec2 = call({}), _dec3 = call({}
   }) {
     const voting = this.votings.find(v => v.vid == votingId);
     if (voting) {
-      return voting.votedAccountId.some(id => id == currentAccountId());
+      const votedAccountId = voting.votedAccountId.find(id => id == currentAccountId());
+      if (votedAccountId) {
+        return true;
+      }
     }
     return false;
   }

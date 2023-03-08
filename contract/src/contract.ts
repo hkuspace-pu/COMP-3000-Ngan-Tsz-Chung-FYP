@@ -33,7 +33,10 @@ export class EVotingContract {
   //check admin
   @call({})
   isAdmin({aid}:{aid: string}): boolean {
-    return this.admins.some((admin) => admin.aid == aid)
+    const admin = this.admins.find((admin) => admin.aid == aid)
+    if (admin){
+        return true
+    }
   }
   // Get the list of admins  
   @view({})
@@ -128,7 +131,10 @@ export class EVotingContract {
   isVoted({votingId}:{votingId: number}): boolean {
     const voting = this.votings.find((v) => v.vid == votingId);
     if (voting){
-      return voting.votedAccountId.some((id) => id ==  near.currentAccountId())
+      const votedAccountId = voting.votedAccountId.find((id) => id ==  near.currentAccountId())
+      if (votedAccountId){
+        return true
+      }
     }
     return false;
   }
