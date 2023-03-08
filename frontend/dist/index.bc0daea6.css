@@ -28,6 +28,14 @@ body {
   margin-top: 4px !important;
 }
 
+.title-primary {
+  color: #fff !important;
+  background-color: green !important;
+  margin: 5px !important;
+  padding: 5px 10px !important;
+  font-size: 14px !important;
+}
+
 :root {
   --bs-blue: #0d6efd;
   --bs-indigo: #6610f2;

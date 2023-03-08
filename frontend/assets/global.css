@@ -27,3 +27,11 @@ body {
 .mt-0 {
   margin-top: 4px !important;
 }
+
+.title-primary {
+  background-color:green !important;
+  color: rgba(255, 255, 255, 1.0) !important;
+  font-size: 14 !important;
+  padding: 5px 10px !important;
+  margin: 5px !important;
+}
