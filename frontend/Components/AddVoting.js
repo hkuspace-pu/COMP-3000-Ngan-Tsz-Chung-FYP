@@ -8,7 +8,8 @@ export default function AddVoting({contract}) {
       voteNameRef.current.value,
       voteDescriptionRef.current.value).then(() => 
       {
-      window.location.replace("/")
+        changeDisable(false);
+        window.location.replace("/")
     }))
   };
 

@@ -678,9 +678,9 @@ let EVotingContract = (_dec = NearBindgen({}), _dec2 = call({}), _dec3 = call({}
   // Allow a user to vote for a candidate in a specific voting
   vote({
     votingId,
-    candidateId
+    candidateId,
+    accountId
   }) {
-    const accountId = currentAccountId();
     const voting = this.votings.find(v => v.vid == votingId);
     if (voting) {
       if (voting.votedAccountId.some(aid => aid == accountId)) {
@@ -699,11 +699,12 @@ let EVotingContract = (_dec = NearBindgen({}), _dec2 = call({}), _dec3 = call({}
     }
   }
   isVoted({
-    votingId
+    votingId,
+    accountId
   }) {
     const voting = this.votings.find(v => v.vid == votingId);
     if (voting) {
-      const votedAccountId = voting.votedAccountId.find(id => id == currentAccountId());
+      const votedAccountId = voting.votedAccountId.find(id => id == accountId);
       if (votedAccountId) {
         return true;
       }

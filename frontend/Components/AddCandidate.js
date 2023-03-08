@@ -18,7 +18,7 @@ export default function AddCandidate({contract}) {
             candidateImageRef.current.value,
             candidateDescriptionRef.current.value,
             ).then(() => {
-      
+              changeDisable(false);
               window.location.replace("/VotingPage")
             
             })

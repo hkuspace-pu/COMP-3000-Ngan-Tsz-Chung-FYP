@@ -57,13 +57,18 @@ export class Contract {
   }
 
 
-  async vote(votingId,candidateId){
-     return this.wallet.callMethod({ contractId:this.contractId ,method: 'vote', args: { votingId: votingId, candidateId:candidateId} })
+  async vote(votingId,candidateId,accountId){
+     return this.wallet.callMethod({ contractId:this.contractId ,method: 'vote', args: { votingId: votingId, candidateId:candidateId,accountId:accountId} })
   }
 
-  async isVoted(votingId){
-    return this.wallet.viewMethod({contractId:this.contractId, method: 'isVoted' , args: { votingId: votingId }})
+  async isVoted(votingId,accountId){
+    return this.wallet.viewMethod({contractId:this.contractId, method: 'isVoted' , args: { votingId: votingId ,accountId:accountId}})
   }
+
+  async getAccountId(){
+    return this.wallet.viewMethod({contractId:this.contractId, method: 'getAccountId'})
+  }
+  
 
   check(){
     // use the wallet to query the contract's greeting

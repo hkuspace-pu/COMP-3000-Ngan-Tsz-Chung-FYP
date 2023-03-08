@@ -4,10 +4,10 @@ import React, { useEffect, useState }  from 'react';
 
 export default function VotingPage({contract,isAdmin}) {
   const [candidateList, changeCandidateList] = useState([]);
-  const [isVoted, changeIsVoted] = useState(false);
+  const [isVoted, changeIsVoted] = useState(true);
     let voteId = localStorage.getItem("voteId");
     let description = localStorage.getItem("description");
-    
+    let accountId = localStorage.getItem("accountId");
     console.log('VotingPage voteId = ' + voteId);
     console.log('contract = ' + contract.check());
     useEffect(() => {
@@ -17,7 +17,7 @@ export default function VotingPage({contract,isAdmin}) {
           var candidates = await contract.getCandidates(voteId)
           console.log('candidates = ' + JSON.stringify(candidates));
 
-          changeIsVoted(await contract.isVoted(voteId))
+          changeIsVoted(await contract.isVoted(voteId,accountId))
         } catch (error) {
           console.log('error = ' + error);
         }
@@ -32,9 +32,11 @@ export default function VotingPage({contract,isAdmin}) {
     };
    
     const vote = async (candidateId) => {
+      changeIsVoted(true)
       console.log('voteId = ' + voteId);
       console.log('candidateId = ' + candidateId);
-      await contract.vote(voteId,candidateId);
+      await contract.vote(voteId,candidateId,accountId);
+      changeIsVoted(await contract.isVoted(voteId,accountId))
       changeCandidateList(await contract.getCandidates(voteId));
     };
 

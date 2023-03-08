@@ -107,8 +107,7 @@ export class EVotingContract {
 
   // Allow a user to vote for a candidate in a specific voting
   @call({})
-  vote({votingId, candidateId}:{votingId: number, candidateId: number}): void {
-    const accountId = near.currentAccountId();
+  vote({votingId, candidateId,accountId}:{votingId: number, candidateId: number,accountId:string}): void {
     const voting = this.votings.find((v) => v.vid == votingId);
     if (voting){
         if (voting.votedAccountId.some((aid) => aid == accountId)) {
@@ -128,10 +127,10 @@ export class EVotingContract {
   }
 
   @view({})
-  isVoted({votingId}:{votingId: number}): boolean {
+  isVoted({votingId,accountId}:{votingId: number,accountId:string}): boolean {
     const voting = this.votings.find((v) => v.vid == votingId);
     if (voting){
-      const votedAccountId = voting.votedAccountId.find((id) => id ==  near.currentAccountId())
+      const votedAccountId = voting.votedAccountId.find((id) => id ==  accountId)
       if (votedAccountId){
         return true
       }
@@ -158,6 +157,5 @@ export class EVotingContract {
   getVotingsCount(): number {
     return this.votings.length;
   }
-
 
 }

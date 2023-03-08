@@ -2,7 +2,14 @@ body {
   margin: 0;
 
 }
-
+.container-login {
+  background-color:green !important;
+  display: flex;
+    width: 100%;
+    max-width: 60%;
+    margin: 0 auto;
+    justify-content: center;
+}
 .color-nav{
   background-color:darkblue;
   color: white;
@@ -35,3 +42,5 @@ body {
   padding: 5px 10px !important;
   margin: 5px !important;
 }
+
+
