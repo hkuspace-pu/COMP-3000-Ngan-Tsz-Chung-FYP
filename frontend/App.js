@@ -18,9 +18,36 @@ import {
   Route,Routes
 } from "react-router-dom";
 export default function App({ isSignedIn, contractId, wallet, contract }) {
+  const addAmin= async () =>{
+    await contract.addAdmin('ngantszchung.testnet')
+  }
+  addAmin()
+  const [isAdmin, changeIsAdmin] = useState(false);
+    useEffect(() => {
+      const getPrompts = async () => {
+        try {
+          var admins = await contract.getAdmins()
+          var checkIsAdmin = admins.some((admin) => admin.aid == wallet.accountId)
+          changeIsAdmin(checkIsAdmin);
+          
+       
+        } catch (error) {
+          console.log('error = ' + error);
+        }
+      };
+      getPrompts();
+    }, []);
+
+  console.log('wallet.accountId ' + wallet.accountId)
+  console.log('isAdmin = ' + JSON.stringify(isAdmin));
+
+  
 
 
-
+  const getAdmins = async () => {
+    await contract.getAdmins();
+    changeVotingList(await contract.getVotings());
+  };
   return (  <Router>
               <Navbar className='color-nav' collapseOnSelect expand="lg" variant="dark">
                 <Container>
@@ -38,7 +65,8 @@ export default function App({ isSignedIn, contractId, wallet, contract }) {
                     </Nav>
                     <Nav>
                       {isSignedIn?<Nav.Link  href="/">{(isSignedIn?wallet.accountId:'')}</Nav.Link>:null}
-                      {isSignedIn?<Nav.Link href="/AddVoting">Add Voting</Nav.Link>:null}
+                      
+                      {isAdmin ? (isSignedIn?<Nav.Link href="/AddVoting">Add Voting</Nav.Link>:null):null}
                       <Nav.Link onClick={isSignedIn?() => wallet.signOut():() => wallet.signIn()}>
                         {isSignedIn?'Logout':'Login'}
                       </Nav.Link>
@@ -48,7 +76,7 @@ export default function App({ isSignedIn, contractId, wallet, contract }) {
               </Navbar>
                 <Routes>
                 <Route exact path="/" element={
-                isSignedIn?<Home contract={contract} />:
+                isSignedIn?<Home contract={contract} isAdmin={isAdmin}/>:
                 <div style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -69,9 +97,9 @@ export default function App({ isSignedIn, contractId, wallet, contract }) {
              
               
               }/>
-                  <Route exact path="/VotingPage" element={<VotingPage contract={contract}/>}/>
-                  <Route exact path="/AddVoting" element={<AddVoting contract={contract}/>}/>
-                  <Route exact path="/AddCandidate" element={<AddCandidate contract={contract}/>}/>
+                  <Route exact path="/VotingPage" element={<VotingPage contract={contract} isAdmin={isAdmin}/>}/>
+                  <Route exact path="/AddVoting" element={<AddVoting contract={contract} isAdmin={isAdmin}/>}/>
+                  <Route exact path="/AddCandidate" element={<AddCandidate contract={contract} isAdmin={isAdmin}/>}/>
                 </Routes>
               </Router>
   )

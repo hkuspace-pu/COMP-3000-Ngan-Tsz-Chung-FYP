@@ -3,7 +3,7 @@ import React , { useEffect, useState } from 'react';
 import {Table,Container,Button} from 'react-bootstrap'
 import { Candidate } from '../../contract/src/model'
 import 'bootstrap/dist/css/bootstrap.min.css'
-export default function Home({contract }) {
+export default function Home({contract,isAdmin}) {
 
   const [votingList, changeVotingList] = useState([]);
     useEffect(() => {
@@ -19,19 +19,21 @@ export default function Home({contract }) {
       getPrompts();
     }, []);
 
-  function getVotings(){
-    // use the wallet to query the contract's greeting
-    return wallet.viewMethod({ method: 'getVotings', contractId })
-  }
-  const gotoVotingPage = async (voteId) => {
+  const gotoVotingPage = async (voteId,description) => {
     console.log(' voteId = ' + voteId);
     localStorage.setItem("voteId", voteId);
+    localStorage.setItem("description", description);
     window.location.replace("/VotingPage");
+  };
+
+  const deleteVoting = async (voteId) => {
+    await contract.deleteVoting(voteId);
+    changeVotingList(await contract.getVotings());
   };
     return (  
       <Container>
         {/* <Button onClick={()=>{addVoting('voting 1')}}>Add Vote Activity</Button> */}
-        <Table style={{margin:'2vh'}} striped border hover>
+        <Table style={{margin:'2vh'}} striped border>
           <thead>
             <tr>
               <th>Id</th>
@@ -47,14 +49,20 @@ export default function Home({contract }) {
                   <tr key={index}>
                     <td>{voting.vid}</td>
                     <td>{voting.title}</td>
-                    <td><Button className='btn btn-primary' onClick={() => gotoVotingPage(voting.vid)}>Poll</Button></td>
+                    <td>
+                      <Button className='btn btn-primary' onClick={() => gotoVotingPage(voting.vid,voting.description)}>
+                        Go to Poll
+                      </Button>
+                      {isAdmin ? <Button className='btn btn-primary' onClick={() => deleteVoting(voting.vid)}>
+                        Detele
+                      </Button> : null}
+                    </td>
                   </tr>
                 );
               })
             }
           </tbody>
         </Table>
-
       </Container>
     )
   }

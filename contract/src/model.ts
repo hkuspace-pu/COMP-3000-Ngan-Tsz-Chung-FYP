@@ -19,10 +19,20 @@ export class Candidate {
 export class Voting {
     vid: number = 0;
   title: string = '';
+  description: string = '';
   candidates: Candidate[] = [];
   votedAccountId:string[] = [];
-  constructor(vid:number,title: string) {
+  constructor(vid:number,title: string,description:string) {
     this.vid = vid;
     this.title = title;
+    this.description = description;
+  }
+}
+
+// Admin data structure
+export class Admin {
+    aid: string = '';
+  constructor(aid:string) {
+    this.aid = aid;
   }
 }

@@ -57,6 +57,7 @@ export default function AddCandidate({contract}) {
     >
       Submit
     </Button>
+   
   </Container>
     )
   }

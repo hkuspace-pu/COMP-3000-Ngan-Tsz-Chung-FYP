@@ -1,6 +1,6 @@
 // Find all our documentation at https://docs.near.org
 import { NearBindgen, near, call, view ,initialize} from 'near-sdk-js';
-import { Candidate, Voting } from './model';
+import { Candidate, Voting,Admin } from './model';
 
 
 
@@ -10,10 +10,38 @@ import { Candidate, Voting } from './model';
 @NearBindgen({})
 export class EVotingContract {
   votings: Voting[]
-
+  admins: Admin[]
   constructor() {
     this.votings = new Array<Voting>()
+    this.admins = new Array<Admin>()
   }
+
+  //add a admin
+  @call({})
+  addAdmin({aid}:{aid: string}): void {
+    if (this.admins.some((admin) => admin.aid == aid)){
+      return;
+    }
+    const admin = new Admin(aid);
+    this.admins.push(admin);
+  }
+  //delete a admin
+  @call({})
+  deleteAdmin({aid}:{aid: string}): void {
+    this.admins = this.admins.filter((admin) => admin.aid != aid)
+  }
+  //check admin
+  @call({})
+  isAdmin({aid}:{aid: string}): boolean {
+    return this.admins.some((admin) => admin.aid == aid)
+  }
+  // Get the list of admins  
+  @view({})
+  getAdmins() : Admin[]{
+    return this.admins;
+  }
+
+
   // Get the list of votings
   @view({})
   getVotings() : Voting[]{
@@ -22,10 +50,18 @@ export class EVotingContract {
 
   //add a voting
   @call({})
-  addVoting({title}:{title: string}): void {
-    const voting = new Voting((this.votings.length + 1),title);
+  addVoting({title,description}:{title: string,description:string}): void {
+    const voting = new Voting((this.votings.length + 1),title,description);
     this.votings.push(voting);
   }
+
+  @call({})
+  deleteVoting({votingId}: {votingId: number}): void {
+   
+    this.votings = this.votings.filter((voting) => voting.vid != votingId)
+    
+  }
+
   
   //add candidate in a voting
   @call({})
@@ -34,6 +70,14 @@ export class EVotingContract {
     if (voting){
       const candidate = new Candidate((voting.candidates.length + 1),name, image, description);
       voting.candidates.push(candidate);
+    }
+  }
+
+  @call({})
+  deleteCandidate({votingId, candidateId}: {votingId: number, candidateId: number}): void {
+    const voting = this.votings.find((v) => v.vid == votingId);
+    if (voting){
+      voting.candidates = voting.candidates.filter((candidate) => candidate.cid != candidateId)
     }
   }
 
@@ -79,6 +123,16 @@ export class EVotingContract {
         return;
     }
   }
+
+  @view({})
+  isVoted({votingId}:{votingId: number}): boolean {
+    const voting = this.votings.find((v) => v.vid == votingId);
+    if (voting){
+      return voting.votedAccountId.some((id) => id ==  near.currentAccountId())
+    }
+    return false;
+  }
+
 
   // Get the total number of candidates in a specific voting
   @view({})
