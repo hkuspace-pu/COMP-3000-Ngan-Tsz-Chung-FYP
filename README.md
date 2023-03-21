@@ -1,5 +1,5 @@
 Blockchain in e-voting
-==================
+======================
 
 This app was initialized with [create-near-app]
 The aim of this project is for education only. 
@@ -24,6 +24,12 @@ Contact
 =======
 
 E-mail:tze.ngan@students.plymouth.ac.uk
+
+
+Modify Block in Android Demo
+============================
+
+use /blockchain_mobile_application_demo/blockchain_mobile_application_demo.apk
 
 
 Reference
