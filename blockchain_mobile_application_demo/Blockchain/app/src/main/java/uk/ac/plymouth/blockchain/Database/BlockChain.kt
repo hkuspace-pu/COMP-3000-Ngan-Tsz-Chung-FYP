@@ -81,7 +81,8 @@ class BlockChain {
                 return "hash is Empty"
             }
             if (Block.calculateHash(block) != block.hash){
-                return "calculateHash != block.hash \n" + "block.hash  = " + block.hash + "\ncalculateHash = " + Block.calculateHash(block)
+                return "calculateHash != block.hash \n" + "block.hash  = " + block.hash +
+                        "\ncalculateHash = " + Block.calculateHash(block)
             }
         }
         return ""

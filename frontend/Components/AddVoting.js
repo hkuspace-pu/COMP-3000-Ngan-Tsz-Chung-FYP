@@ -14,8 +14,9 @@ export default function AddVoting({contract}) {
   };
 
   
-  const [disableButton, changeDisable] = useState(false);
+  const [disableButton, changeDisable] = useState(true);
   const voteNameRef = useRef();
+  
   const voteDescriptionRef = useRef();
     return (      <Container style={{ marginTop: "10px" }}>
     <Form>
@@ -24,6 +25,9 @@ export default function AddVoting({contract}) {
         <Form.Control  
           ref={voteNameRef}
           placeholder='Enter Vote Name'
+          onChange={(text) => {
+            changeDisable(voteDescriptionRef.current.value == "" || voteNameRef.current.value == "");
+        }}
         ></Form.Control>
       </Form.Group>
       <Form.Group as={Col} className='mb-3'>
@@ -31,13 +35,16 @@ export default function AddVoting({contract}) {
         <Form.Control
           ref={voteDescriptionRef}
           placeholder='Enter Vote Description'
+          onChange={(text) => {
+              changeDisable(voteDescriptionRef.current.value == "" || voteNameRef.current.value == "");
+          }}
         ></Form.Control>
          </Form.Group>
     </Form>
 
     <Button
     class='btn-primary'
-      disabled={disableButton}
+      disabled={disableButton || !voteNameRef || !voteDescriptionRef}
       onClick={addNewvoting}
     >
       Submit
